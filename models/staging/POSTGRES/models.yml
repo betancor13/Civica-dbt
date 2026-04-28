@@ -22,7 +22,7 @@ models:                                         # Comienza la lista de todos los
         constraints:
           - type: not_null
       - name: price                             # Columna de precio. 
-        data_type: real
+        data_type: number
         constraints:
           - type: not_null
       - name: inventory                         # Cantidad en stock. 
@@ -30,9 +30,9 @@ models:                                         # Comienza la lista de todos los
         constraints:
           - type: not_null
       - name: _fivetran_deleted                 # Columna técnica de Fivetran. 
-        data_type: boolean
+        data_type: text
       - name: _fivetran_synced                  # Fecha de sincronización. 
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
         constraints:
           - type: not_null
 
@@ -60,9 +60,9 @@ models:                                         # Comienza la lista de todos los
       - name: country
         data_type: text
       - name: _fivetran_deleted                 # Añadido: Debe estar en el YAML si está en el SQL.
-        data_type: boolean
+        data_type: text
       - name: _fivetran_synced
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
 
   - name: stg_POSTGRES__ORDERS                  # Tercer modelo: Pedidos.
     config:
@@ -79,35 +79,35 @@ models:                                         # Comienza la lista de todos los
       - name: shipping_service
         data_type: text
       - name: shipping_cost
-        data_type: real
+        data_type: number
       - name: address_id                        # Foreign Key hacia addresses.
         data_type: text
         constraints:
           - type: not_null
       - name: created_at
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
       - name: promo_id                          # Foreign Key hacia promos.
         data_type: text
       - name: estimated_delivery_at
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
       - name: order_cost
-        data_type: real
+        data_type: number
       - name: user_id                           # Foreign Key hacia users.
         data_type: text
         constraints:
           - type: not_null
       - name: order_total
-        data_type: real
+        data_type: number
       - name: delivered_at
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
       - name: tracking_id
         data_type: text
       - name: status
         data_type: text
       - name: _fivetran_deleted
-        data_type: boolean
+        data_type: text
       - name: _fivetran_synced
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
 
   - name: stg_POSTGRES__ORDERITEMS              # Cuarto modelo: Detalle de ítems.
     config:
@@ -129,9 +129,9 @@ models:                                         # Comienza la lista de todos los
       - name: quantity
         data_type: number
       - name: _fivetran_deleted
-        data_type: boolean
+        data_type: text
       - name: _fivetran_synced
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
 
   - name: stg_POSTGRES__PROMOS                  # Quinto modelo: Promociones.
     config:
@@ -150,9 +150,9 @@ models:                                         # Comienza la lista de todos los
       - name: status
         data_type: text
       - name: _fivetran_deleted
-        data_type: boolean
+        data_type: text
       - name: _fivetran_synced
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
 
   - name: stg_POSTGRES__USER                    # Sexto modelo: Usuarios.
     config:
@@ -177,12 +177,12 @@ models:                                         # Comienza la lista de todos los
       - name: address_id
         data_type: text
       - name: total_orders
-        data_type: number
+        data_type: text
       - name: created_at
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
       - name: updated_at
-        data_type: timestamp_tz
+        data_type: timestamp_ntz
       - name: _fivetran_deleted
-        data_type: boolean
+        data_type: text
       - name: _fivetran_synced
-        data_type: timestamp_tz
+        data_type: timestamp_ntz

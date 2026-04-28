@@ -38,6 +38,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   my_new_project:              # Nombre del proyecto
     staging:
+      +database: D18_SILVER_DB # Indicas que Staging va a la database Silver
+      +schema: staging            # Esto creará un esquema como 'TU_NOMBRE_STAGING'
       +materialized: view      # staging = vistas
-    marts:
-      +materialized: table     # marts = tablas físicas
+    #marts:
+      #+materialized: table     # marts = tablas físicas
