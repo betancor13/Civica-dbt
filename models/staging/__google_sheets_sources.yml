@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: google_sheets      # Nombre interno para dbt
+    database: D18_BRONZE_DB   # Tu base de datos real en Snowflake
+    schema: GOOGLE_SHEETS     # Tu esquema real en Snowflake
+    
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    config:
+      freshness:
+        warn_after: {count: 24, period: hour}
+        error_after: {count: 48, period: hour}
+
+    tables:
+      - name: GOOGLE_SHEETS          # El nombre de la tabla que creaste en Snowflake
+        columns:
+          - name: _row
+          - name: product_id
+          - name: quantity
+          - name: month
+          - name: _fivetran_synced
