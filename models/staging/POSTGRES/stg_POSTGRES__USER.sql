@@ -1,3 +1,8 @@
+{{ config(
+    materializec = 'view',
+    tags = ['silver']
+ )}}
+
 with source as (
     select * from {{ source('POSTGRES', 'USER') }}
 ),

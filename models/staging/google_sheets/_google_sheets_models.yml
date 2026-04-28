@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_google_sheets__GOOGLE_SHEETS
+    description: "Datos de presupuesto provenientes de Google Sheets."
+    columns:
+      - name: _row
+        data_type: number
+        description: "Número de fila de la hoja."
+      - name: product_id
+        data_type: text
+        description: "ID del producto relacionado con el presupuesto."
+      - name: quantity
+        data_type: number
+        description: "Cantidad presupuestada."
+      - name: month
+        data_type: text
+        description: "Mes del presupuesto."
+      - name: _fivetran_synced
+        data_type: timestamp_tz
