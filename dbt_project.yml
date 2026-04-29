@@ -42,4 +42,6 @@ models:
       +schema: staging            # Esto creará un esquema como 'TU_NOMBRE_STAGING'
       +materialized: view      # staging = vistas
     marts:
+      +database: D18_GOLD_DB
+      +schema: core
       +materialized: table     # marts = tablas físicas
