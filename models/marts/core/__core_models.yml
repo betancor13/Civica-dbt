@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Tabla de hechos de pedidos con agregados de productos por pedido."
+    columns:
+      - name: order_id
+        description: "ID único del pedido."
+        data_tests:
+          - not_null
+          - unique
