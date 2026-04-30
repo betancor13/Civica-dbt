@@ -1,82 +1,130 @@
-sources:
-  - name: POSTGRES      # Nombre interno para dbt
-    database: D18_BRONZE_DB   # Tu base de datos real en Snowflake
-    schema: POSTGRES     # Tu esquema real en Snowflake
-    
-    quoting:
-      database: false
-      schema: false
-      identifier: false
+version: 2
 
-    config:
+sources:
+  - name: postgres                                                  # Nombre interno para dbt
+    description: "Datos raw de Postgres importados por Fivetran"
+    database: "D18_BRONZE_DB"                                       # La base de datos real en Snowflake
+    schema: POSTGRES                                                # El esquema real en Snowflake
+
+    config:                                                         # Configuración de Freshness (Frescura de datos)
       freshness:
-        warn_after: {count: 24, period: hour}
-        error_after: {count: 48, period: hour}
+        warn_after: {count: 24, period: hour}                       # Lanza un Warning en Amarillo si no hay datos nuevos en las últimas 24h
+        error_after: {count: 48, period: hour}                      # Lanza un ERROR en rojo si no hay datos nuevos en las últimas 48h
+      loaded_at_field: _fivetran_synced                             # Columna con la fecha de la última carga como referencia
 
     tables:
-      - name: ADDRESSES          # El nombre de la tabla que creaste en Snowflake
+      - name: addresses                                             # El nombre de la tabla que creaste en Snowflake
         columns:
-          - name: ADDRESS_ID
-          - name: ZIPCODE
-          - name: COUNTRY
-          - name: ADDRESS
-          - name: STATE
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
+          - name: address_id
+            data_type: varchar
+          - name: zipcode
+            data_type: number
+          - name: country
+            data_type: varchar
+          - name: address
+            data_type: varchar
+          - name: state
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: ORDERITEMS          # El nombre de la tabla que creaste en Snowflake
+      - name: orderitems
         columns:
-          - name: ORDER_ID
-          - name: PRODUCT_ID
-          - name: QUANTITY
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
+          - name: order_id
+            data_type: varchar
+          - name: product_id
+            data_type: varchar
+          - name: quantity
+            data_type: number
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: ORDERS          # El nombre de la tabla que creaste en Snowflake
+      - name: orders
         columns:
-          - name: ADRESS_ID
-          - name: CREATED_AT
-          - name: DELIVERED_AT
-          - name: ESTIMATED_DELIVERY_AT
-          - name: ORDER_COST
-          - name: ORDER_ID
-          - name: ORDER_TOTAL
-          - name: PROMO_ID
-          - name: SHIPPING_COST
-          - name: SHIPPING_SERVICE
-          - name: STATUS
-          - name: TRACKING_ID
-          - name: USER_ID
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
+          - name: order_id
+            data_type: varchar
+          - name: shipping_service
+            data_type: varchar
+          - name: shipping_cost
+            data_type: number
+          - name: address_id
+            data_type: varchar
+          - name: created_at
+            data_type: timestamp_ntz
+          - name: promo_id
+            data_type: varchar
+          - name: estimated_delivery_at
+            data_type: timestamp_ntz
+          - name: order_cost
+            data_type: number
+          - name: user_id
+            data_type: varchar
+          - name: order_total
+            data_type: number
+          - name: delivered_at
+            data_type: timestamp_ntz
+          - name: tracking_id
+            data_type: varchar
+          - name: status
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: PRODUCTS          # El nombre de la tabla que creaste en Snowflake
+      - name: products
         columns:
-          - name: PRODUCT_ID
-          - name: PRICE
-          - name: NAME
-          - name: INVENTORY
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
+          - name: product_id
+            data_type: varchar
+          - name: price
+            data_type: number
+          - name: name
+            data_type: varchar
+          - name: inventory
+            data_type: number
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: PROMOS          # El nombre de la tabla que creaste en Snowflake
+      - name: promos
         columns:
-          - name: PROMO_ID
-          - name: DISCOUNT
-          - name: STATUS
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
-          
-      - name: USER          # El nombre de la tabla que creaste en Snowflake
+          - name: promo_id
+            data_type: varchar
+          - name: discount
+            data_type: number
+          - name: status
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+
+      - name: user
         columns:
-          - name: USER_ID
-          - name: UPDATED_AT
-          - name: ADDRESS_ID
-          - name: LAST_NAME
-          - name: CREATED_AT
-          - name: PHONE_NUMBER
-          - name: TOTAL_ORDERS
-          - name: FIRST_NAME
-          - name: EMAIL
-          - name: _FIVETRAN_DELETED
-          - name: _FIVETRAN_SYNCED
+          - name: user_id
+            data_type: varchar
+          - name: updated_at
+            data_type: timestamp_ntz
+          - name: address_id
+            data_type: varchar
+          - name: last_name
+            data_type: varchar
+          - name: created_at
+            data_type: timestamp_ntz
+          - name: phone_number
+            data_type: varchar
+          - name: total_orders
+            data_type: varchar
+          - name: first_name
+            data_type: varchar
+          - name: email
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz

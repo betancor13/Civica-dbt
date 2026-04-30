@@ -1,5 +1,5 @@
 {{ config(
-    materializec = 'view',
+    materialized = 'view',
     tags = ['silver']
  )}}
 
