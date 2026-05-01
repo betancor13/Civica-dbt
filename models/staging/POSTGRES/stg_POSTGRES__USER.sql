@@ -4,7 +4,7 @@
  )}}
 
 with source as (
-    select * from {{ source('POSTGRES', 'USER') }}
+    select * from {{ source('postgres', 'user') }}
 ),
 
 renamed as (

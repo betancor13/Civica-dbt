@@ -1,19 +1,19 @@
 version: 2
 
 sources:
-  - name: postgres                                                  # Nombre interno para dbt
+  - name: postgres                                          # Nombre interno para dbt (EN MINÚSCULAS)
     description: "Datos raw de Postgres importados por Fivetran"
-    database: "D18_BRONZE_DB"                                       # La base de datos real en Snowflake
-    schema: POSTGRES                                                # El esquema real en Snowflake
+    database: "D18_BRONZE_DB"                               # La base de datos real en Snowflake
+    schema: POSTGRES                                        # El esquema real en Snowflake
 
-    config:                                                         # Configuración de Freshness (Frescura de datos)
+    config:                                                 # Configuración de Freshness (Frescura de datos)
       freshness:
-        warn_after: {count: 24, period: hour}                       # Lanza un Warning en Amarillo si no hay datos nuevos en las últimas 24h
-        error_after: {count: 48, period: hour}                      # Lanza un ERROR en rojo si no hay datos nuevos en las últimas 48h
-      loaded_at_field: _fivetran_synced                             # Columna con la fecha de la última carga como referencia
+        warn_after: {count: 24, period: hour}               # Lanza un Warning si no hay datos nuevos en 24h
+        error_after: {count: 48, period: hour}              # Lanza un ERROR en rojo si no hay datos en 48h
+      loaded_at_field: _fivetran_synced                     # Columna con la fecha de la última carga
 
     tables:
-      - name: addresses                                             # El nombre de la tabla que creaste en Snowflake
+      - name: addresses                                     # Nombre de la tabla (EN MINÚSCULAS)
         columns:
           - name: address_id
             data_type: varchar

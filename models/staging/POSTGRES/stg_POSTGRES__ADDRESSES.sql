@@ -2,7 +2,7 @@ with
 
 source as (
 
-    select * from {{ source('POSTGRES', 'ADDRESSES') }}
+    select * from {{ source('postgres', 'addresses') }}
 
 ),
 

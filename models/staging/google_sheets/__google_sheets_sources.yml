@@ -15,6 +15,7 @@ sources:
         warn_after: {count: 24, period: hour}
         error_after: {count: 48, period: hour}
 
+
     tables:
       - name: GOOGLE_SHEETS          # El nombre de la tabla que creaste en Snowflake
         columns:
@@ -23,3 +24,10 @@ sources:
           - name: quantity
           - name: month
           - name: _fivetran_synced
+
+      - name: users
+        columns:
+          - name: Nombre
+          - name: DNI
+          - name: email
+          - name: fecha_alta_sistema
