@@ -1,26 +1,16 @@
--- Importamos los modelos de Staging usando ref()
-WITH stg_orders AS (
-    SELECT * FROM {{ ref('stg_POSTGRES__ORDERS') }}
-),
+{{ config(materialized = 'table') }}
 
-stg_order_items AS (
-    SELECT * FROM {{ ref('stg_POSTGRES__ORDERITEMS') }}
-),
-
--- Transformación: Agregamos los productos por pedido
-order_items_agg AS (
-    SELECT 
-        order_id,
-        COUNT(DISTINCT product_id) AS n_products,
-        SUM(quantity) AS total_qty
-    FROM stg_order_items 
-    GROUP BY 1
+WITH stg AS (
+    SELECT
+        o.* EXCLUDE (order_total, order_cost, shipping_cost),
+        TRY_CAST(REPLACE(o.order_total::STRING,',', '.') AS NUMBER(18, 2)) AS order_total,
+        TRY_CAST(REPLACE(o.order_cost::STRING,',', '.') AS NUMBER(18, 2)) AS order_cost,
+        TRY_CAST(REPLACE(o.shipping_cost::STRING,',', '.') AS NUMBER(18, 2)) AS shipping_cost,
+        o.created_at AS order_date,
+        a.country AS address_country
+    FROM {{ ref('dim_orders') }} o
+    INNER JOIN {{ ref('dim_addresses') }} a ON o.address_id = a.address_id
+    INNER JOIN {{ ref('dim_users') }} u ON o.user_id = u.user_id
 )
 
--- SELECT final con el JOIN
-SELECT 
-    o.*, 
-    oi.n_products, 
-    oi.total_qty
-FROM stg_orders o
-LEFT JOIN order_items_agg oi ON o.order_id = oi.order_id
+SELECT * FROM stg

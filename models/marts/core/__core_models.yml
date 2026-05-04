@@ -1,11 +1,68 @@
-version: 2
+version: 2                                          # Indica a dbt la versión de la sintaxis YAML
 
-models:
-  - name: fct_orders
+models:                                             # Bloque principal de propiedades de modelos
+  - name: fct_orders                                # Nombre físico de la tabla en la base de datos
     description: "Tabla de hechos de pedidos con agregados de productos por pedido."
-    columns:
-      - name: order_id
+    columns:                                        # Documentación y tests de columnas físicas
+      - name: order_id                              # Columna física del modelo que actúa como ID
         description: "ID único del pedido."
-        data_tests:
-          - not_null
-          - unique
+        data_tests:                                 # Reglas de validacion de datos en dbt
+          - not_null                                # Asegura que no haya nulos
+          - unique                                  # Asegura que no haya duplicados
+
+# BLOQUE 1: MODELO SEMÁNTICO (Estructura de la tabla)
+semantic_models:
+  - name: orders                                    # Nombre lógico para la capa semántica
+    model: ref('fct_orders')                        # Referencia a la tabla física definida arriba
+    defaults:
+      agg_time_dimension: order_date                # Fecha por defecto para agrupar
+    
+    entities:                                       # Definición de llaves para JOINs
+      - name: orders                                # Entidad principal (Primary Key)
+        type: primary
+        expr: order_id
+      - name: user                                  # Entidad para conectar con usuarios (Foreign Key)
+        type: foreign
+        expr: user_id
+
+    dimensions:                                     # Columnas para filtrar o agrupar (GROUP BY)
+      - name: order_date                            # Dimensión temporal
+        type: time
+        type_params:
+          time_granularity: day                     # Grano más fino: días
+      - name: status                                # Dimensión de texto (Estado)
+        type: categorical
+      - name: country                               # Dimensión de texto (País)
+        type: categorical
+        expr: address_country                       # Usamos la columna física 'address_country'
+
+    measures:                                       # Agregaciones básicas (el "qué" sumamos)
+      - name: order_amount
+        agg: sum
+        expr: order_total
+      - name: order_count
+        agg: count
+        expr: order_id
+      - name: distinct_users
+        agg: count_distinct
+        expr: user_id
+
+# BLOQUE 2: MÉTRICAS (Las reglas de negocio que ve el usuario)
+metrics:
+  - name: total_revenue                             # Nombre de la métrica final
+    label: "Total Revenue"
+    type: simple                                    # Tipo de métrica: simple
+    type_params:
+      measure: order_amount                         # Referencia a la measure definida arriba
+
+  - name: total_orders
+    label: "Total Orders"
+    type: simple
+    type_params:
+      measure: order_count
+
+  - name: total_unique_buyers
+    label: "Total Unique Buyers"
+    type: simple
+    type_params:
+      measure: distinct_users
