@@ -28,6 +28,7 @@ semantic_models:
     dimensions:                                     # Columnas para filtrar o agrupar (GROUP BY)
       - name: order_date                            # Dimensión temporal
         type: time
+        expr: to_date(order_date)                   # Convertimos el timestamp a fecha pura
         type_params:
           time_granularity: day                     # Grano más fino: días
       - name: status                                # Dimensión de texto (Estado)
