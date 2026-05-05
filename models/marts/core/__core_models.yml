@@ -10,7 +10,7 @@ models:                                             # Bloque principal de propie
           - not_null                                # Asegura que no haya nulos
           - unique                                  # Asegura que no haya duplicados
 
-# BLOQUE 1: MODELO SEMÁNTICO (Estructura de la tabla)
+# BLOQUE 1: MODELO SEMÁNTICO
 semantic_models:
   - name: orders                                    # Nombre lógico para la capa semántica
     model: ref('fct_orders')                        # Referencia a la tabla física definida arriba
@@ -47,7 +47,7 @@ semantic_models:
         agg: count_distinct
         expr: user_id
 
-# BLOQUE 2: MÉTRICAS (Las reglas de negocio que ve el usuario)
+# BLOQUE 2: MÉTRICAS
 metrics:
   - name: total_revenue                             # Nombre de la métrica final
     label: "Total Revenue"
