@@ -1,0 +1,1 @@
+SELECT * FROM {{ ref('dim_time') }} LIMIT 10
