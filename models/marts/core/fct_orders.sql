@@ -13,4 +13,11 @@ WITH stg AS (
     INNER JOIN {{ ref('dim_users') }} u ON o.user_id = u.user_id
 )
 
-SELECT * FROM stg
+-- Aquí hacemos el SELECT final y le añadimos tu CASE WHEN usando 
+SELECT 
+    *,
+    CASE 
+        WHEN order_total >= 100 THEN 'VIP'
+        ELSE 'Normal' 
+    END as order_category
+FROM stg

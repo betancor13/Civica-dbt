@@ -2,13 +2,39 @@ version: 2                                          # Indica a dbt la versión d
 
 models:                                             # Bloque principal de propiedades de modelos
   - name: fct_orders                                # Nombre físico de la tabla en la base de datos
-    description: "Tabla de hechos de pedidos con agregados de productos por pedido."
+    description: '{{ doc("doc_fct_orders") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - order_date
+            
     columns:                                        # Documentación y tests de columnas físicas
       - name: order_id                              # Columna física del modelo que actúa como ID
         description: "ID único del pedido."
         data_tests:                                 # Reglas de validacion de datos en dbt
-          - not_null                                # Asegura que no haya nulos
           - unique                                  # Asegura que no haya duplicados
+          - not_null:                               # Asegura que no haya nulos    
+              config:
+                severity: error                     #Si esto falla, muestra error
+
+      - name: order_total
+        description: "Importe total del pedido. No puede ser negativo."
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              config: 
+                severity: warn                      #Si esto falla, muestra warn en amarillo
+
+              
+  - name: dim_users
+    description: "Dimensión de usuarios"
+    columns:
+      
+      - name: user_id
+        tests:
+          - unique
+          - not_null
 
 # BLOQUE 1: MODELO SEMÁNTICO
 semantic_models:
@@ -66,3 +92,27 @@ metrics:
     type: simple
     type_params:
       measure: distinct_users
+
+unit_tests:
+  - name: test_order_category_logic
+    description: "Comprueba que la logica del CASE WHEN funciona bien."
+    model: fct_orders
+    given:
+      - input: ref('dim_orders') 
+        rows:
+          # Usamos IDs de texto ('A' y 'U') en lugar de numeros
+          - {order_id: 1, order_total: 150, address_id: 'A', user_id: 'U'}
+          - {order_id: 2, order_total: 50, address_id: 'A', user_id: 'U'}
+          
+      - input: ref('dim_addresses')
+        rows:
+          - {address_id: 'A'}
+          
+      - input: ref('dim_users')
+        rows:
+          - {user_id: 'U'}
+          
+    expect:
+      rows:
+        - {order_id: 1, order_category: 'VIP'}
+        - {order_id: 2, order_category: 'Normal'}

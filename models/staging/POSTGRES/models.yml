@@ -56,6 +56,9 @@ models:
       - name: user_id
         data_tests:
           - not_null
+          - relationships:
+              to: ref('stg_POSTGRES_USER')
+              field: user_id
       - name: order_total
       - name: delivered_at
       - name: tracking_id
